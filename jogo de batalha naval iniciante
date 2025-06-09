@@ -1,0 +1,77 @@
+#include <stdio.h>
+
+#define TAMANHO_TABULEIRO 10
+#define TAMANHO_NAVIO 3
+#define NAVIO 3
+#define AGUA 0
+
+// Função para inicializar o tabuleiro com zeros
+void inicializarTabuleiro(int tabuleiro[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO]) {
+    for (int i = 0; i < TAMANHO_TABULEIRO; i++) {
+        for (int j = 0; j < TAMANHO_TABULEIRO; j++) {
+            tabuleiro[i][j] = AGUA;
+        }
+    }
+}
+
+// Função para verificar se o navio pode ser posicionado no local desejado
+int podePosicionar(int tabuleiro[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO], int linha, int coluna, int orientacao) {
+    for (int i = 0; i < TAMANHO_NAVIO; i++) {
+        int l = linha + (orientacao == 1 ? i : 0);    // vertical
+        int c = coluna + (orientacao == 0 ? i : 0);   // horizontal
+        if (l >= TAMANHO_TABULEIRO || c >= TAMANHO_TABULEIRO || tabuleiro[l][c] != AGUA) {
+            return 0; // Fora dos limites ou sobreposição
+        }
+    }
+    return 1;
+}
+
+// Função para posicionar um navio
+void posicionarNavio(int tabuleiro[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO], int linha, int coluna, int orientacao) {
+    for (int i = 0; i < TAMANHO_NAVIO; i++) {
+        int l = linha + (orientacao == 1 ? i : 0);
+        int c = coluna + (orientacao == 0 ? i : 0);
+        tabuleiro[l][c] = NAVIO;
+    }
+}
+
+// Função para exibir o tabuleiro
+void exibirTabuleiro(int tabuleiro[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO]) {
+    printf("Tabuleiro:\n");
+    for (int i = 0; i < TAMANHO_TABULEIRO; i++) {
+        for (int j = 0; j < TAMANHO_TABULEIRO; j++) {
+            printf("%d ", tabuleiro[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    int tabuleiro[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO];
+    inicializarTabuleiro(tabuleiro);
+
+    // Coordenadas dos navios (linha, coluna)
+    int linha1 = 2, coluna1 = 4; // navio horizontal
+    int linha2 = 5, coluna2 = 1; // navio vertical
+
+    // Tentar posicionar o primeiro navio (orientação 0 = horizontal)
+    if (podePosicionar(tabuleiro, linha1, coluna1, 0)) {
+        posicionarNavio(tabuleiro, linha1, coluna1, 0);
+    } else {
+        printf("Erro: não foi possível posicionar o navio horizontal!\n");
+        return 1;
+    }
+
+    // Tentar posicionar o segundo navio (orientação 1 = vertical)
+    if (podePosicionar(tabuleiro, linha2, coluna2, 1)) {
+        posicionarNavio(tabuleiro, linha2, coluna2, 1);
+    } else {
+        printf("Erro: não foi possível posicionar o navio vertical!\n");
+        return 1;
+    }
+
+    // Exibir o tabuleiro com os navios posicionados
+    exibirTabuleiro(tabuleiro);
+
+    return 0;
+}
